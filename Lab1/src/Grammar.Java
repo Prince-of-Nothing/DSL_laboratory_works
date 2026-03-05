@@ -59,7 +59,6 @@ class Grammar {
     }
 }
 
-
 class FiniteAutomaton {
     private Set<String> states;
     private Set<Character> sigma;

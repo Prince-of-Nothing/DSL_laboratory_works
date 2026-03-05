@@ -35,8 +35,123 @@
 
 - Check if a given string belongs to the language of the finite automaton.
 
-## References
+## Implementation Description
+### Grammar Class
+The `Grammar` class represents the given grammar with:
+- **Terminal symbols** (`VT`)
+- **Non-terminal symbols** (`VN`)
+- **Start symbol** (`S`)
+- **Production rules** (`P`)
 
+
+A method generates five valid strings based on the production rules.
+
+### FiniteAutomaton Class
+The `FiniteAutomaton` class represents the equivalent finite automaton with:
+- **Alphabet** (`Sigma`)
+- **Transition function** (`delta`)
+- **Initial state** (`q0`)
+- **States** (`Q`)
+- **Final states** (`F`)
+
+A method verifies whether a given string is valid according to the automaton.
+
+### Code Snippets
+#### Grammar Class
+```java
+public class Grammar {
+    //variables
+
+    public Grammar(Set<String> VN, Set<String> VT, Map<String, List<String>> P, String S) {
+        //basic constructor
+    }
+
+    public String generateString() {
+        StringBuilder result = new StringBuilder();
+        char current = startSymbol;
+
+        while (VN.contains(current)) {
+            List<String> productions = P.get(current);
+            if (productions == null || productions.isEmpty()) break;
+            String selectedProduction = productions.get(new Random().nextInt(productions.size()));
+            result.append(selectedProduction.charAt(0));
+
+            if (selectedProduction.length() > 1)
+                current = selectedProduction.charAt(1);
+            else
+                break;
+        }
+        return result.toString();
+    }
+
+    public FiniteAutomaton toFiniteAutomaton() {
+              for (var entry : P.entrySet()) {
+            String fromState = String.valueOf(entry.getKey());
+            states.add(fromState);
+            transitions.putIfAbsent(fromState, new HashMap<>());
+
+            for (String production : entry.getValue()) {
+                char terminal = production.charAt(0);
+                String toState = (production.length() > 1) ? String.valueOf(production.charAt(1)) : "FINAL";
+                transitions.get(fromState).put(terminal, toState);
+                states.add(toState);
+                if (!VN.contains(toState.charAt(0))) {
+                    finalStates.add(toState);
+                }
+            }
+        }
+
+        return new FiniteAutomaton(states, sigma, transitions, startState, finalStates);
+    }
+}
+```
+
+```java
+class FiniteAutomaton {
+
+    public FiniteAutomaton(Set<String> states, Set<Character> sigma, Map<String, Map<Character, String>> transitions, String startState, Set<String> finalStates) {//...
+    }
+
+    public boolean stringBelongToLanguage(String input) {
+        String currentState = startState;
+
+        for (char symbol : input.toCharArray()) {
+            if (!transitions.containsKey(currentState) || !transitions.get(currentState).containsKey(symbol))
+                return false;
+            currentState = transitions.get(currentState).get(symbol);
+        }
+        return finalStates.contains(currentState);
+    }
+}
+
+```
+
+#### Main Execution
+```java
+public class Main {
+    public static void main(String[] args) {
+        // VN, VT and P rules
+
+        Grammar grammar = new Grammar(VN, VT, P, 'S');
+
+        System.out.println("Generated words:");
+        for (int i = 0; i < 5; i++) {
+            System.out.println(grammar.generateString());
+        }
+
+        FiniteAutomaton fa = grammar.toFiniteAutomaton();
+    }
+}
+```
+
+## Results
+- Successfully implemented the Grammar class.
+- Generated valid strings based on the production rules.
+- Converted the grammar into a finite automaton.
+- Verified string acceptance using FA state transitions.
+
+
+## References
 - Hopcroft E. and others. Introduction to Automata Theory, Languages and Computation
 - LFPC Guide (ELSE)
 - Introduction to formal languages (ELSE)
