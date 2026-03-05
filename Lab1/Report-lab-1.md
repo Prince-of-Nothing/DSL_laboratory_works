@@ -106,6 +106,7 @@ public class Grammar {
 }
 ```
 
+#### FiniteAutomaton Class
 ```java
 class FiniteAutomaton {
 
