@@ -1,5 +1,4 @@
 # Determinism in Finite Automata. Conversion from NDFA 2 DFA. Chomsky Hierarchy.
-
 ### Course: Formal Languages & Finite Automata
 ### Author: Pleșu Dinu FAF-241
 
@@ -61,7 +60,7 @@ Please consider that all elements of the task 3 can be done manually, writing a 
 
 ## Conclusions / Screenshots / Results
 
-- NDFA Definition: Implemented the finite automaton for Variant 3.
+- NDFA Definition: Implemented the finite automaton for Variant 20.
 - Determinism Check: The automaton correctly identified as non-deterministic.
 - NDFA to DFA Conversion: Successfully converted the NDFA to an equivalent DFA using the subset construction algorithm.
 - Chomsky Hierarchy: The project lays the foundation for further extensions (e.g., grammar classification) linking finite automata to regular grammars (Type-3) within the Chomsky hierarchy.
