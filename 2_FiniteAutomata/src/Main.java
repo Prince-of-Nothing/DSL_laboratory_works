@@ -2,18 +2,14 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        Set<String> states = new HashSet<>(Arrays.asList("q0", "q1", "q2", "q3", "q4"));
-        Set<Character> alphabet = new HashSet<>(Arrays.asList('a', 'b'));
+        Set<String> states = new HashSet<>(Arrays.asList("q0", "q1", "q2", "q3"));
+        Set<Character> alphabet = new HashSet<>(Arrays.asList('a', 'b','c'));
 
         Map<String, Map<Character, Set<String>>> transitions = new HashMap<>();
 
-        transitions.put("q0", Map.of('a', Set.of("q1")));
-        transitions.put("q1", Map.of('b', Set.of("q1"), 'a', Set.of("q2")));
-        transitions.put("q2", Map.of('b', Set.of("q2", "q3")));
-        transitions.put("q3", Map.of('b', Set.of("q4"), 'a', Set.of("q1")));
-
+        transitions.put("q0", Map.of('a', Set.of("q0")));
         String startState = "q0";
-        Set<String> finalStates = Set.of("q4");
+        Set<String> finalStates = Set.of("q3");
 
         FiniteAutomaton fa = new FiniteAutomaton(states, alphabet, transitions, startState, finalStates);
         System.out.println("Automaton Type: " + (fa.isDeterministic() ? "DFA" : "NDFA"));
