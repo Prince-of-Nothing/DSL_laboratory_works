@@ -70,46 +70,8 @@ class FiniteAutomaton {
         return new DFA(dfaStates, alphabet, dfaTransitions, initialState, dfaFinalStates);
     }
 
-    public Map<String, List<String>> toRegularGrammar() {
-        Map<String, List<String>> grammarProductions = new LinkedHashMap<>();
-
-        for (var stateEntry : transitions.entrySet()) {
-            String fromState = stateEntry.getKey();
-            grammarProductions.putIfAbsent(fromState, new ArrayList<>());
-
-            for (var symbolEntry : stateEntry.getValue().entrySet()) {
-                char symbol = symbolEntry.getKey();
-                for (String toState : symbolEntry.getValue()) {
-                    grammarProductions.get(fromState).add(symbol + toState);
-                    if (finalStates.contains(toState)) {
-                        grammarProductions.get(fromState).add(String.valueOf(symbol));
-                    }
-                }
-            }
-        }
-
-        return grammarProductions;
-    }
-
-    public boolean stringBelongToLanguage(String input) {
-        Set<String> currentStates = new HashSet<>();
-        currentStates.add(startState);
-
-        for (char symbol : input.toCharArray()) {
-            Set<String> nextStates = new HashSet<>();
-            for (String state : currentStates) {
-                if (transitions.containsKey(state) && transitions.get(state).containsKey(symbol)) {
-                    nextStates.addAll(transitions.get(state).get(symbol));
-                }
-            }
-            currentStates = nextStates;
-            if (currentStates.isEmpty()) return false;
-        }
-
-        for (String state : currentStates) {
-            if (finalStates.contains(state)) return true;
-        }
-        return false;
+    public String getGrammarType() {
+        return "Regular Grammar (Type-3)";
     }
 }
 
@@ -126,19 +88,6 @@ class DFA {
         this.transitions = transitions;
         this.startState = startState;
         this.finalStates = finalStates;
-    }
-
-    public boolean stringBelongToLanguage(String input) {
-        Set<String> current = startState;
-
-        for (char symbol : input.toCharArray()) {
-            if (!transitions.containsKey(current) || !transitions.get(current).containsKey(symbol)) {
-                return false;
-            }
-            current = transitions.get(current).get(symbol);
-        }
-
-        return finalStates.contains(current);
     }
 
     @Override
