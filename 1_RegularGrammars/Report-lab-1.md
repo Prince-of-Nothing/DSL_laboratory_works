@@ -1,4 +1,4 @@
-# Topic: Intro to formal languages. Regular grammars. Finite Automata.
+# Topic: Determinism in Finite Automata. Conversion from NDFA 2 DFA. Chomsky Hierarchy.
 
 ### Course: Formal Languages & Finite Automata
 ### Author: Pleșu Dinu FAF-241
