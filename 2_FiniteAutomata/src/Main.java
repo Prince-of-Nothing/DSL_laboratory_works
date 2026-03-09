@@ -20,11 +20,11 @@ public class Main {
         Set<String> finalStates = Set.of("q3");
 
         FiniteAutomaton fa = new FiniteAutomaton(states, alphabet, transitions, startState, finalStates);
-        System.out.println("Automaton Type: " + (fa.isDeterministic() ? "DFA" : "NDFA"));
+        System.out.println("Type of Automaton: " + (fa.isDeterministic() ? "DFA" : "NDFA"));
 
         DFA dfa = fa.toDFA();
         System.out.println("\n" + dfa);
 
-        System.out.println("\nGrammar Classification: " + fa.getGrammarType());
+        System.out.println("\nClassification of Grammar: " + fa.getGrammarType());
     }
 }
