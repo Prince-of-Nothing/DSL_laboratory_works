@@ -158,7 +158,8 @@ public class Main {
 }
 ```
 ## Screenshot
-<img width="1613" height="245" alt="image" src="https://github.com/user-attachments/assets/df3da0c1-0a85-40d4-aed8-80eca7aaec2b" />
+<img width="920" height="224" alt="image" src="https://github.com/user-attachments/assets/8ad5c95d-abda-47a3-bfe9-e0f7fd24b697" />
+
 
 ## Results
 - Successfully implemented the Grammar class.
