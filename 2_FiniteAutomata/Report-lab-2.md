@@ -3,7 +3,9 @@
 ### Course: Formal Languages & Finite Automata
 ### Author: Pleșu Dinu FAF-241
 
-# Theory
+----
+
+## Theory
 
 #### A finite automaton (FA) is a computational model used to recognize patterns in strings. It consists of:
 
@@ -57,16 +59,14 @@ Grammars are classified into four types:
 Please consider that all elements of the task 3 can be done manually, writing a detailed report about how you've done the conversion and what changes have you introduced. In case if you'll be able to write a complete program that will take some finite automata and then convert it to the regular grammar - this will be **a good bonus point**.
 ## Implementation description
 
-## Screenshots
+## Conclusions / Screenshots / Results
 
-## Results
 - NDFA Definition: Implemented the finite automaton for Variant 3.
 - Determinism Check: The automaton correctly identified as non-deterministic.
 - NDFA to DFA Conversion: Successfully converted the NDFA to an equivalent DFA using the subset construction algorithm.
 - Chomsky Hierarchy: The project lays the foundation for further extensions (e.g., grammar classification) linking finite automata to regular grammars (Type-3) within the Chomsky hierarchy.
 - Graphical Representation: (Optional bonus) Visual representation can be generated using external tools/libraries.
 
-## Conclusion
 This project demonstrates the conversion of a non-deterministic finite automaton into a deterministic one using the subset construction algorithm. Additionally, it shows the derivation of a regular grammar from the automaton, reaffirming its position within the Chomsky hierarchy (Type 3). The modular design allows for easy extensions, such as adding graphical representations or further testing.
 
 ## References
