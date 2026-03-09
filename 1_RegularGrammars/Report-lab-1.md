@@ -1,7 +1,11 @@
 # Topic: Intro to formal languages. Regular grammars. Finite Automata.
-## Course: Formal Languages & Finite Automata
-## Author: Pleșu Dinu FAF-241
-# Theory
+
+### Course: Formal Languages & Finite Automata
+### Author: Pleșu Dinu FAF-241
+
+----
+
+## Theory
 
 #### A formal grammar is a set of rules used to generate strings in a language. It consists of:
 
@@ -26,7 +30,7 @@
     A finite automaton can verify if a string belongs to a language by following state transitions based on input symbols. If the automaton reaches a final state, the string is accepted.
 
 
-# Objectives:
+## Objectives:
 
 1. Discover what a language is and what it needs to have in order to be considered a formal one;
 
@@ -48,7 +52,7 @@
 
     d. For the Finite Automaton, please add a method that checks if an input string can be obtained via the state transition from it;
 
-## Implementation Description
+## Implementation description
 ### Grammar Class
 The `Grammar` class represents the given grammar with:
 - **Terminal symbols** (`VT`)
@@ -157,17 +161,14 @@ public class Main {
     }
 }
 ```
-## Screenshot
+## Conclusions / Screenshots / Results
+
 <img width="920" height="224" alt="image" src="https://github.com/user-attachments/assets/8ad5c95d-abda-47a3-bfe9-e0f7fd24b697" />
 
-
-## Results
 - Successfully implemented the Grammar class.
 - Generated valid strings based on the production rules.
 - Converted the grammar into a finite automaton.
 - Verified string acceptance using FA state transitions.
-
-## Conclusion
 
 ## References
 - Hopcroft E. and others. Introduction to Automata Theory, Languages and Computation
