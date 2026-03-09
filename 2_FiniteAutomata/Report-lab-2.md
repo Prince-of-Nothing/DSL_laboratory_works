@@ -2,8 +2,34 @@
 
 ### Course: Formal Languages & Finite Automata
 ### Author: Pleșu Dinu FAF-241
-## Theory
-If needed, but it should be written by the author in her/his words.
+
+# Theory
+
+#### A finite automaton (FA) is a computational model used to recognize patterns in strings. It consists of:
+
+- Q (States): A finite set of states.
+- Σ (Alphabet): A finite set of input symbols.
+- δ (Transition function): Defines state changes based on input symbols.
+- q₀ (Start state): The state where execution begins.
+- F (Final states): Accepting states that determine if a string is valid.
+
+#### Deterministic vs. Non-Deterministic Finite Automata
+- **Deterministic Finite Automaton (DFA):** Each state has exactly one transition for each symbol in the alphabet.
+- **Non-Deterministic Finite Automaton (NDFA):** A state can have multiple transitions for the same symbol or ε-moves (empty transitions).
+
+
+#### NDFA to DFA Conversion
+The subset construction algorithm is used to convert an NDFA into an equivalent DFA:
+1. Each state in the DFA represents a set of states in the NDFA.
+2. Process all transitions from the NDFA to form deterministic transitions.
+3. Identify final states as those that contain any accepting state from the NDFA.
+
+#### Chomsky Hierarchy
+Grammars are classified into four types:
+- **Type 0 (Unrestricted Grammar):** No restrictions on production rules.
+- **Type 1 (Context-Sensitive Grammar):** Productions must maintain string length or increase it.
+- **Type 2 (Context-Free Grammar):** Each production has a single non-terminal on the left-hand side.
+- **Type 3 (Regular Grammar):** Productions follow strict forms (A → aB or A → a).
 
 ## Objectives:
 
@@ -31,7 +57,19 @@ If needed, but it should be written by the author in her/his words.
 Please consider that all elements of the task 3 can be done manually, writing a detailed report about how you've done the conversion and what changes have you introduced. In case if you'll be able to write a complete program that will take some finite automata and then convert it to the regular grammar - this will be **a good bonus point**.
 ## Implementation description
 
-## Conclusions / Screenshots / Results
+## Screenshots
 
+## Results
+- NDFA Definition: Implemented the finite automaton for Variant 3.
+- Determinism Check: The automaton correctly identified as non-deterministic.
+- NDFA to DFA Conversion: Successfully converted the NDFA to an equivalent DFA using the subset construction algorithm.
+- Chomsky Hierarchy: The project lays the foundation for further extensions (e.g., grammar classification) linking finite automata to regular grammars (Type-3) within the Chomsky hierarchy.
+- Graphical Representation: (Optional bonus) Visual representation can be generated using external tools/libraries.
+
+## Conclusion
+This project demonstrates the conversion of a non-deterministic finite automaton into a deterministic one using the subset construction algorithm. Additionally, it shows the derivation of a regular grammar from the automaton, reaffirming its position within the Chomsky hierarchy (Type 3). The modular design allows for easy extensions, such as adding graphical representations or further testing.
 
 ## References
+- Hopcroft E. and others. Introduction to Automata Theory, Languages and Computation
+- LFPC Guide (ELSE)
+- Introduction to formal languages (ELSE)
