@@ -2,9 +2,6 @@
 
 ### Course: Formal Languages & Finite Automata
 ### Author: Pleșu Dinu FAF-241
-## Theory
-If needed, but it should be written by the author in her/his words.
-
 ## Objectives:
 
 1. Understand what an automaton is and what it can be used for.
@@ -29,9 +26,6 @@ If needed, but it should be written by the author in her/his words.
     - Your program needs to gather and send the data about the automaton and the lib/tool/API return the visual representation.
 
 Please consider that all elements of the task 3 can be done manually, writing a detailed report about how you've done the conversion and what changes have you introduced. In case if you'll be able to write a complete program that will take some finite automata and then convert it to the regular grammar - this will be **a good bonus point**.
-## Implementation description
-
-## Conclusions / Screenshots / Results
 
 
-## References
+## Conclusion
