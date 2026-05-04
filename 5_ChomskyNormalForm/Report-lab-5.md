@@ -1,59 +1,99 @@
 # Topic: Chomsky Normal Form
 
 ### Course: Formal Languages & Finite Automata
-### Author: Student
+### Author: Student | Variant 20
 
 ----
 
 ## Theory
-Chomsky Normal Form restricts a context-free grammar to productions of the form:
+Chomsky Normal Form is a restricted form of context-free grammar where every production must be one of the following:
 - `A -> BC`
 - `A -> a`
 
-This restriction is useful because it removes irregular rule shapes and prepares the grammar for standard algorithms such as CYK.
+This normalization is useful because it removes irregular rules and prepares the grammar for formal analysis and parsing algorithms such as CYK.
 
 ## Objectives
-1. Implement a reusable CNF converter.
-2. Handle epsilon productions, unit productions, inaccessible symbols, and nonproductive symbols.
-3. Keep the converter generic enough to work with grammars beyond a single hardcoded rule.
+For Variant 20 the required steps are:
+
+1. Eliminate epsilon productions.
+2. Eliminate renaming productions.
+3. Eliminate inaccessible symbols.
+4. Eliminate nonproductive symbols.
+5. Obtain the Chomsky Normal Form.
+
+## Variant 20 Grammar
+The laboratory work is implemented for the following grammar:
+
+```text
+G = (VN, VT, P, S)
+VN = {S, A, B, C, D}
+VT = {a, b}
+
+P:
+1.  S -> aB
+2.  S -> bA
+3.  S -> A
+4.  A -> B
+5.  A -> Sa
+6.  A -> bBA
+7.  A -> b
+8.  B -> b
+9.  B -> bS
+10. B -> aD
+11. B -> epsilon
+12. D -> AA
+13. C -> Ba
+```
+
+This grammar is a good CNF exercise because it contains:
+- an epsilon production: `B -> epsilon`
+- renaming productions: `S -> A`, `A -> B`
+- an inaccessible symbol: `C`
+- mixed and long productions such as `A -> bBA`
 
 ## Implementation Description
-The lab was rewritten in Java around three source files:
+The solution is implemented in Java using three main files:
 
-- `Grammar.java` stores non-terminals, terminals, the start symbol, and production rules.
-- `CNFConverter.java` performs the normalization steps.
-- `Main.java` builds a sample grammar and prints every conversion stage.
+- `Grammar.java` stores `VN`, `VT`, the start symbol, and the production rules.
+- `CNFConverter.java` performs the normalization stages.
+- `Main.java` defines the Variant 20 grammar and prints the grammar after each transformation.
 
-The grammar is represented with:
+The production rules are stored as:
 
 ```java
 Map<String, Set<List<String>>> productions
 ```
 
-Using lists for the right-hand side means the converter can work with symbols of any length, not only single-character variables.
+This makes the converter flexible enough to work with right-hand sides of different lengths.
 
-### Conversion pipeline
-The converter applies the standard sequence:
+## Transformation Pipeline
+The converter follows the same order as the assignment:
 
-1. eliminate epsilon productions
-2. eliminate unit productions
-3. eliminate inaccessible symbols
-4. eliminate nonproductive symbols
-5. rewrite the grammar into CNF
+1. epsilon elimination
+2. renaming elimination
+3. inaccessible symbol elimination
+4. nonproductive symbol elimination
+5. conversion to CNF
 
-### Epsilon elimination
-Nullable symbols are computed first. Then every valid combination of removing nullable symbols from a right-hand side is generated.
+### 1. Eliminate epsilon productions
+The converter first computes the nullable symbols. In this grammar, `B` is nullable because of `B -> epsilon`. Then it rebuilds all productions by generating valid alternatives where nullable symbols may disappear.
 
-### Unit elimination
-Rules such as `A -> B` are removed through a closure over reachable unit transitions. Each non-terminal inherits only the non-unit productions of the symbols it reaches.
+### 2. Eliminate renaming productions
+Renaming rules are productions such as `S -> A` and `A -> B`. The converter computes the closure of unit transitions and replaces them with the non-unit productions reachable through those symbols.
 
-### Final CNF conversion
-The last stage does two things:
-- replaces terminals inside long or mixed productions with helper non-terminals such as `T1 -> a`
-- breaks long right-hand sides into binary rules using helper symbols such as `N1`, `N2`
+### 3. Eliminate inaccessible symbols
+Starting from `S`, the converter marks all reachable non-terminals. Since `C` cannot be reached from `S`, it is removed together with its productions.
+
+### 4. Eliminate nonproductive symbols
+A non-terminal is productive if it can derive a terminal string. The converter removes symbols and rules that can never produce terminal words.
+
+### 5. Obtain Chomsky Normal Form
+The final stage transforms the grammar into valid CNF:
+- terminals inside larger productions are replaced with helper symbols such as `T1 -> a`
+- long right-hand sides are split into binary productions using helper symbols such as `N1`, `N2`
 
 ## Program Execution
-`Main.java` prints the grammar after every step:
+`Main.java` prints:
 
 ```text
 Original grammar
@@ -64,13 +104,27 @@ After nonproductive symbol elimination
 Final CNF grammar
 ```
 
-At the end, the program also checks that every rule is either terminal-only or binary.
+At the end, the program validates that every production is either:
+- one terminal, or
+- two non-terminals
+
+## Difficulties Faced
+1. The grammar contains several transformation cases at once.
+   Because of that, the elimination stages must be applied in the correct order.
+
+2. The right-hand sides are not all the same length.
+   Using `List<String>` for productions made the converter more robust than a character-based approach.
+
+3. The grammar includes both unreachable and nullable structures.
+   That makes it useful for demonstration, but it also means the report must explain why some symbols disappear during the process.
 
 ## Conclusions
-- The converter is now structured around a reusable `Grammar` model and a focused `CNFConverter`.
-- Each normalization stage is visible and easy to present.
-- The final validation confirms that the resulting grammar satisfies CNF.
+- The implementation now uses the exact Variant 20 grammar.
+- All required normalization stages are visible separately.
+- The final grammar is validated to ensure it satisfies Chomsky Normal Form.
+- The program is structured clearly enough to present step by step during the lab defense.
 
 ## References
 - [Chomsky normal form](https://en.wikipedia.org/wiki/Chomsky_normal_form)
+- [Context-free grammar](https://en.wikipedia.org/wiki/Context-free_grammar)
 - [CYK algorithm](https://en.wikipedia.org/wiki/CYK_algorithm)

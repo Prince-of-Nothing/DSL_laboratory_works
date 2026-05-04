@@ -1,6 +1,6 @@
 public class Main {
     public static void main(String[] args) {
-        Grammar grammar = buildSampleGrammar();
+        Grammar grammar = buildVariant20Grammar();
         CNFConverter converter = new CNFConverter();
 
         printStep("Original grammar", grammar);
@@ -24,33 +24,29 @@ public class Main {
         System.out.println("CNF validation: " + converter.isCNF(grammar));
     }
 
-    private static Grammar buildSampleGrammar() {
+    private static Grammar buildVariant20Grammar() {
         Grammar grammar = new Grammar(
-            java.util.List.of("S", "A", "B", "C", "D", "F", "X"),
+            java.util.List.of("S", "A", "B", "C", "D"),
             java.util.List.of("a", "b"),
             "S"
         );
 
-        grammar.addProduction("S", "A", "B");
+        grammar.addProduction("S", "a", "B");
         grammar.addProduction("S", "b", "A");
-        grammar.addProduction("S", "D");
+        grammar.addProduction("S", "A");
 
-        grammar.addProduction("A", "a");
-        grammar.addProduction("A", "a", "S");
-        grammar.addProduction("A");
+        grammar.addProduction("A", "B");
+        grammar.addProduction("A", "S", "a");
+        grammar.addProduction("A", "b", "B", "A");
+        grammar.addProduction("A", "b");
 
         grammar.addProduction("B", "b");
-        grammar.addProduction("B", "C");
-        grammar.addProduction("B", "b", "B");
+        grammar.addProduction("B", "b", "S");
+        grammar.addProduction("B", "a", "D");
+        grammar.addProduction("B");
 
-        grammar.addProduction("C", "A", "A");
-        grammar.addProduction("C", "a", "B");
-
-        grammar.addProduction("D", "A", "B");
-        grammar.addProduction("D", "F");
-
-        grammar.addProduction("F", "F", "F");
-        grammar.addProduction("X", "a", "X");
+        grammar.addProduction("D", "A", "A");
+        grammar.addProduction("C", "B", "a");
         return grammar;
     }
 
