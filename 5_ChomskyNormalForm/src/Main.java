@@ -3,6 +3,14 @@ public class Main {
         Grammar grammar = buildVariant20Grammar();
         CNFConverter converter = new CNFConverter();
 
+        // Compute final CNF first and show it as a preview
+        Grammar cnfPreview = converter.toCNF(
+            converter.eliminateNonProductive(
+            converter.eliminateInaccessible(
+            converter.eliminateUnit(
+            converter.eliminateEpsilon(grammar.copy())))));
+        printStep("Final CNF grammar (preview)", cnfPreview);
+
         printStep("Original grammar", grammar);
 
         grammar = converter.eliminateEpsilon(grammar);
@@ -54,6 +62,5 @@ public class Main {
         System.out.println(title);
         System.out.println("-".repeat(title.length()));
         System.out.println(grammar.format());
-        System.out.println();
     }
 }
