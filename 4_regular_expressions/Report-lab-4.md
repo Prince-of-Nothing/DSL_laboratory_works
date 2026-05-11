@@ -1,7 +1,8 @@
 # Topic: Regular Expressions
 
 ### Course: Formal Languages & Finite Automata
-### Author: Student | Variant 4
+### Author: Pleșu DInu FAF-241 
+### VariantȘ 4
 
 ----
 
