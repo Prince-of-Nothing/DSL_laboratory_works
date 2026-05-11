@@ -153,6 +153,7 @@ public class CNFConverter {
         );
         int[] counter = {1};
         Map<String, String> terminalHelpers = new java.util.LinkedHashMap<>();
+        Map<List<String>, String> binaryHelpers = new java.util.LinkedHashMap<>();
 
         for (Map.Entry<String, Set<List<String>>> entry : source.getProductions().entrySet()) {
             String lhs = entry.getKey();
@@ -179,18 +180,66 @@ public class CNFConverter {
 
                 String currentLhs = lhs;
                 for (int index = 0; index < rewritten.size() - 2; index++) {
-                    String helper = freshSymbol(result, "N", counter);
+                    List<String> suffixPair = List.of(
+                        rewritten.get(index + 1),
+                        index + 2 == rewritten.size() - 1
+                            ? rewritten.get(index + 2)
+                            : helperForSuffix(
+                                result,
+                                rewritten.subList(index + 2, rewritten.size()),
+                                binaryHelpers,
+                                counter
+                            )
+                    );
+                    String helper = helperForPair(result, suffixPair, binaryHelpers, counter);
                     addRule(result, currentLhs, List.of(rewritten.get(index), helper));
-                    currentLhs = helper;
+                    currentLhs = null;
+                    break;
                 }
-                addRule(result, currentLhs, List.of(
-                    rewritten.get(rewritten.size() - 2),
-                    rewritten.get(rewritten.size() - 1)
-                ));
+                if (rewritten.size() == 3) {
+                    String helper = helperForPair(
+                        result,
+                        List.of(rewritten.get(1), rewritten.get(2)),
+                        binaryHelpers,
+                        counter
+                    );
+                    addRule(result, lhs, List.of(rewritten.get(0), helper));
+                }
             }
         }
 
         return result;
+    }
+
+    private String helperForSuffix(
+        Grammar grammar,
+        List<String> suffix,
+        Map<List<String>, String> binaryHelpers,
+        int[] counter
+    ) {
+        if (suffix.size() == 2) {
+            return helperForPair(grammar, List.of(suffix.get(0), suffix.get(1)), binaryHelpers, counter);
+        }
+
+        String nested = helperForSuffix(grammar, suffix.subList(1, suffix.size()), binaryHelpers, counter);
+        return helperForPair(grammar, List.of(suffix.getFirst(), nested), binaryHelpers, counter);
+    }
+
+    private String helperForPair(
+        Grammar grammar,
+        List<String> pair,
+        Map<List<String>, String> binaryHelpers,
+        int[] counter
+    ) {
+        List<String> key = List.copyOf(pair);
+        if (binaryHelpers.containsKey(key)) {
+            return binaryHelpers.get(key);
+        }
+
+        String helper = freshSymbol(grammar, "N", counter);
+        binaryHelpers.put(key, helper);
+        addRule(grammar, helper, key);
+        return helper;
     }
 
     public boolean isCNF(Grammar grammar) {
