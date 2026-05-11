@@ -217,6 +217,15 @@ Program
 Parenthesised sub-expressions are grouped correctly: both `(a + b)` and `(c - d)` become children of the `*` node, overriding the usual precedence.
 
 ## Conclusions / Screenshots / Results
+
+**Token output** for `function add(a,b){return a+b;}`:
+
+![Tokens screenshot](tokens.PNG)
+
+**AST output** for the same input:
+
+![AST screenshot](AST_converted.PNG)
+
 The implementation satisfies all task requirements:
 - `TokenType` is defined as a Java enum with one entry per category
 - every token type carries a compiled `Pattern` so the lexer uses regular expressions to identify tokens
@@ -228,5 +237,4 @@ All four example inputs parse without errors, and the printed ASTs match the exp
 ## References
 - [Parsing Wiki](https://en.wikipedia.org/wiki/Parsing)
 - [Abstract Syntax Tree Wiki](https://en.wikipedia.org/wiki/Abstract_syntax_tree)
-- [Recursive descent parser](https://en.wikipedia.org/wiki/Recursive_descent_parser)
 - [Recursive descent parser](https://en.wikipedia.org/wiki/Recursive_descent_parser)
