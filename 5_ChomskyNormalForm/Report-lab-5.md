@@ -1,7 +1,8 @@
 # Topic: Chomsky Normal Form
 
 ### Course: Formal Languages & Finite Automata
-### Author: Student | Variant 20
+### Author: Pleșu Dinu FAF-241
+### Variant 20
 
 ----
 
