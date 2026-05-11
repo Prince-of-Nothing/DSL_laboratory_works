@@ -1,7 +1,7 @@
 # Topic: Parser & Building an Abstract Syntax Tree
 
 ### Course: Formal Languages & Finite Automata
-### Author: Student
+### Author: Pleșu Dinu FAF-241
 
 ----
 
