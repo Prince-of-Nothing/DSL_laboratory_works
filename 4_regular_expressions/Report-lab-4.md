@@ -22,15 +22,14 @@ To avoid extremely long generated words, open repetition is limited to 5 occurre
 1. Explain what regular expressions are and what they are used for.
 2. Write code that dynamically interprets the given regular expressions and generates valid combinations of symbols.
 3. Limit undefined repetition to at most 5 occurrences.
-4. Implement the bonus part by showing the sequence of processing for a regular expression.
-5. Generate valid words for the three expressions from Variant 4.
+4. Generate valid words for the three expressions from Variant 4.
 
 ## Variant 4 Input
 The program is currently configured for these three expressions:
 
 1. `(S|T)(U|V)W^*Y^[+]24`
 2. `L(M|N)O^[3]P*Q(2|3)`
-3. `R*S(T|U|N)W(X|Y|Z)^[2]`
+3. `R*S(T|U|V)W(X|Y|Z)^[2]`
 
 Examples expected by the task:
 - `{SUWWY24, SVWY24, ...}`
@@ -79,28 +78,70 @@ if (match(RegexTokenKind.LBRACKET)) {
 ```
 
 ### Interpreter
-The interpreter walks the syntax tree and produces a valid word:
-- `ChoiceNode` randomly selects one branch from an alternation
-- `SequenceNode` concatenates child results
-- quantifiers repeat the previous symbol or group according to the parsed rule
+The interpreter walks the syntax tree and produces a valid word.
+It separates two concerns: **how many times** a node is evaluated (determined by its quantifier) and **what to generate once** (the core structural evaluation).
+
+For every node, `emit` first resolves the repetition count from the node's quantifier, then calls `emitOnce` that many times and concatenates the results:
+
+```java
+private String emit(RegexNode node) {
+    int count = repetitionCount(node.getQuantifier()); // 0–5 for STAR/PLUS, exact for EXACT
+    StringBuilder result = new StringBuilder();
+    for (int i = 0; i < count; i++) result.append(emitOnce(node));
+    return result.toString();
+}
+```
+
+This means quantified groups like `(X|Y|Z)^[2]` call `emitOnce` twice **independently**, so each repetition picks a fresh random option — the result can be `XY`, `YZ`, `XX`, etc., covering the full language `{X,Y,Z}²`.
+
+`emitOnce` handles the structural cases:
+- `LiteralNode` → returns its character
+- `SequenceNode` → concatenates `emit` results for each child
+- `ChoiceNode` → picks a random option and delegates to `emit`
 
 Undefined repetition is capped at 5:
 
 ```java
-int count = switch (quantifier.kind()) {
-    case STAR -> random.nextInt(MAX_REPETITION + 1);
-    case PLUS -> 1 + random.nextInt(MAX_REPETITION);
-    case QUESTION -> random.nextInt(2);
-    case EXACT -> quantifier.count();
-};
+private int repetitionCount(Quantifier quantifier) {
+    if (quantifier == null) return 1;
+    return switch (quantifier.kind()) {
+        case STAR     -> random.nextInt(MAX_REPETITION + 1);   // 0–5
+        case PLUS     -> 1 + random.nextInt(MAX_REPETITION);   // 1–5
+        case QUESTION -> random.nextInt(2);
+        case EXACT    -> quantifier.count();
+    };
+}
 ```
 
-### Bonus: Processing Trace
-The bonus requirement is covered by the trace functionality. It prints the internal tree built from the regex, showing what was grouped first and which quantifier was attached to each symbol or alternation.
+## Program Execution
+For each Variant 4 regex the program generates five sample strings and prints them in set notation.
 
-Example:
+Program output:
 
 ```text
+REGULAR EXPRESSIONS - VARIANT 4
+============================================================
+
+Pattern: (S|T)(U|V)W^*Y^[+]24
+{TUWYYYY24, TUWY24, SVWYYYY24, TUWWYYY24, TUWWWY24, ...}
+
+Pattern: L(M|N)O^[3]P*Q(2|3)
+{LNOOOPPPPQ3, LNOOOPPQ2, LNOOOPQ2, LNOOOQ3, LMOOOPPPPQ2, ...}
+
+Pattern: R*S(T|U|V)W(X|Y|Z)^[2]
+{RRRRSVWXX, SVWXX, RRRRSUWZZ, RSUWZZ, STWZZ, ...}
+```
+
+Notes on the output:
+- Pattern 1: `W^*` can produce zero W's (epsilon), so `TUWY24` is valid alongside `TUWWWY24`.
+- Pattern 2: `P*` produces zero to five P's; `O^[3]` always gives exactly three O's.
+- Pattern 3: `R*` can produce zero R's; `(X|Y|Z)^[2]` evaluates the group twice independently, so it can produce any two-character combination such as `XX`, `YZ`, `ZX`, etc.
+
+## Processing Traces
+The AST built from each regex (for reference):
+
+```text
+Pattern: (S|T)(U|V)W^*Y^[+]24
 SEQ
   OR
     WORD S
@@ -112,22 +153,33 @@ SEQ
   WORD Y +
   WORD 2
   WORD 4
-```
 
-## Program Execution
-For each Variant 4 regex the program:
-- generates five sample strings
-- validates every generated string against an equivalent Java regex
-- prints `OK` or `FAIL`
-- prints the processing trace for the first expression
-
-Example output:
-
-```text
 Pattern: L(M|N)O^[3]P*Q(2|3)
-  LNOOOPQ3             OK
-  LMOOOPQ3             OK
-  LMOOOPPQ2            OK
+SEQ
+  WORD L
+  OR
+    WORD M
+    WORD N
+  WORD O ^3
+  WORD P *
+  WORD Q
+  OR
+    WORD 2
+    WORD 3
+
+Pattern: R*S(T|U|V)W(X|Y|Z)^[2]
+SEQ
+  WORD R *
+  WORD S
+  OR
+    WORD T
+    WORD U
+    WORD V
+  WORD W
+  OR ^2
+    WORD X
+    WORD Y
+    WORD Z
 ```
 
 ## Difficulties Faced
@@ -137,14 +189,13 @@ Pattern: L(M|N)O^[3]P*Q(2|3)
 2. A quantifier must apply only to the previous symbol or grouped expression.
    The lexer was kept symbol-based so a pattern like `P*` affects only `P`, not a longer literal chunk.
 
-3. Validation must still work with Java's regex engine.
-   The custom notation is translated internally into normal Java regex syntax before validation.
+3. A quantifier on a group like `(X|Y|Z)^[2]` means the whole group is evaluated that many times independently, not that a single chosen branch is duplicated. Each evaluation picks a fresh random option from the alternation.
 
 ## Conclusions
 - The program satisfies the task requirement of dynamically interpreting the regular expressions.
-- Undefined repetition is limited to 5 occurrences.
-- The generator produces valid words for the three Variant 4 expressions.
-- The bonus requirement is implemented through the processing trace.
+- Undefined repetition (`^*` / `^[+]`) is limited to at most 5 occurrences; `^*` also correctly allows zero occurrences (epsilon).
+- `(X|Y|Z)^[2]` evaluates the group twice independently, producing any combination from `{X,Y,Z}²`.
+- The generator produces valid words for all three Variant 4 expressions.
 - The code is structured clearly enough to present and explain during the lab defense.
 
 ## References

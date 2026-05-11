@@ -106,21 +106,72 @@ addRule(grammar, helper, key);
 ```
 
 ## Conclusions / Screenshots / Results
-The program prints the grammar after every transformation stage:
-- original grammar
-- after epsilon elimination
-- after renaming elimination
-- after inaccessible symbol elimination
-- after nonproductive symbol elimination
-- final CNF grammar
+The program prints the grammar after every transformation stage. Below is the complete output for Variant 20.
 
-For Variant 20, the result is a valid Chomsky Normal Form grammar and the program finishes with:
-
+**Original grammar**
 ```text
+VN = [S, A, B, C, D]
+VT = [a, b]
+S  = S
+P:
+  A -> B | S a | b | b B A
+  B -> a D | b | b S | epsilon
+  C -> B a
+  D -> A A
+  S -> A | a B | b A
+```
+
+**After epsilon elimination**  
+`B → ε` makes B nullable, which propagates to A (via `A → B`) and S (via `S → A`). Every production containing a nullable symbol gains a copy with that symbol omitted.
+```text
+A -> B | S a | a | b | b A | b B | b B A
+B -> a | a D | b | b S
+C -> B a | a
+D -> A | A A
+S -> A | a | a B | b | b A
+```
+
+**After unit/renaming elimination**  
+Unit chains `S → A → B` are expanded: each symbol inherits all non-unit productions reachable through unit edges.
+```text
+A -> S a | a | a D | b | b A | b B | b B A | b S
+B -> a | a D | b | b S
+C -> B a | a
+D -> A A | S a | a | a D | b | b A | b B | b B A | b S
+S -> S a | a | a B | a D | b | b A | b B | b B A | b S
+```
+
+**After inaccessible symbol elimination**  
+`C` is never reachable from `S` and is removed.
+```text
+A -> S a | a | a D | b | b A | b B | b B A | b S
+B -> a | a D | b | b S
+D -> A A | S a | a | a D | b | b A | b B | b B A | b S
+S -> S a | a | a B | a D | b | b A | b B | b B A | b S
+```
+
+**After nonproductive symbol elimination**  
+All remaining symbols are productive; no change.
+
+**Final CNF grammar**  
+Terminals in mixed productions are lifted to helper non-terminals (`T1 → a`, `T2 → b`). The three-symbol right-hand side `b B A` is binarized to `T2 N3` with `N3 → B A`.
+```text
+VN = [S, A, B, D, T1, T2, N3]
+VT = [a, b]
+S  = S
+P:
+  A -> S T1 | T1 D | T2 A | T2 B | T2 N3 | T2 S | a | b
+  B -> T1 D | T2 S | a | b
+  D -> A A | S T1 | T1 D | T2 A | T2 B | T2 N3 | T2 S | a | b
+  N3 -> B A
+  S -> S T1 | T1 B | T1 D | T2 A | T2 B | T2 N3 | T2 S | a | b
+  T1 -> a
+  T2 -> b
+
 CNF validation: true
 ```
 
-The implementation also satisfies the bonus idea from the task, because the converter is not hardcoded only for one grammar structure. The `Grammar` model and `CNFConverter` methods can be reused for other grammars as well.
+Every production is either `A → a` (single terminal) or `A → BC` (two non-terminals), confirming a valid Chomsky Normal Form.
 
 ## References
 - [Chomsky Normal Form Wiki](https://en.wikipedia.org/wiki/Chomsky_normal_form)
