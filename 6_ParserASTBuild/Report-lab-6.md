@@ -40,6 +40,8 @@ source code -> tokens -> AST
 ### TokenType and regex-based token recognition
 One of the explicit task requirements is to have a type similar to an enum for token categories and to use regular expressions for token identification. This is implemented directly in `TokenType.java`.
 
+The lab 3 lexer used a plain `TokenType` enum with no regex patterns — token recognition was done via a character-level `switch` statement. Lab 6 replaces this with a regex-backed enum so every token type carries its own compiled `Pattern`, and the lexer simply iterates over the enum values calling `matcher.lookingAt()` at the current position.
+
 Examples:
 
 ```java
